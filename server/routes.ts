@@ -217,6 +217,13 @@ export default function(
   app.post("/launchencounter/", importEncounter);
   app.post("/importencounter/", importEncounter);
 
+  app.get("/api/encounter/:id", async (req: Req, res: Res) => {
+    const state = await playerViews.Get(req.params.id);
+    const encounterState = state.encounterState;
+
+    res.json(encounterState);
+  });
+
   app.get("/transferlocalstorage/", (req: Req, res: Res) => {
     res.render("transferlocalstorage", { baseUrl });
   });
