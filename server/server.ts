@@ -43,8 +43,6 @@ async function improvedInitiativeServer() {
   const session = await GetSessionMiddleware(process.env.REDIS_URL);
   app.use(session);
 
-  ConfigureRoutes(app, statBlockLibrary, spellLibrary, playerViews);
-
   const defaultPort = parseInt(process.env.PORT || "80");
 
   if (process.env.ENABLE_CONCURRENCY) {
@@ -62,6 +60,7 @@ async function improvedInitiativeServer() {
   }
 
   const io = socketIO(server);
+  ConfigureRoutes(app, statBlockLibrary, spellLibrary, playerViews, io);
   ConfigureSockets(io, session, playerViews);
 
   if (cluster.worker) {

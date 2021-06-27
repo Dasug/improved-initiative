@@ -85,7 +85,8 @@ export default function(
   app: express.Application,
   statBlockLibrary: Library<StatBlock>,
   spellLibrary: Library<Spell>,
-  playerViews: PlayerViewManager
+  playerViews: PlayerViewManager,
+  io: SocketIO.Server
 ) {
   const mustacheEngine = mustacheExpress();
 
@@ -222,6 +223,15 @@ export default function(
     const encounterState = state.encounterState;
 
     res.json(encounterState);
+  });
+
+  app.post("/api/suggest-damage/", (req: Req, res: Res) => {
+    const encounterId: string = req.body.encounterId;
+    const combatantId: string = req.body.combatantId;
+    const damage: number = parseInt(req.body.damage);
+
+    io.to(encounterId).emit("suggest damage", [combatantId], damage, "API");
+    res.json({ ok: true });
   });
 
   app.get("/transferlocalstorage/", (req: Req, res: Res) => {
